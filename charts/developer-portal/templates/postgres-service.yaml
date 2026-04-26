@@ -1,0 +1,19 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "developer-portal.postgresName" . }}
+  labels:
+    {{- include "developer-portal.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "developer-portal.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+  ports:
+    - port: {{ .Values.postgres.port }}
+      targetPort: postgres
+      protocol: TCP
+      name: postgres
+{{- end }}

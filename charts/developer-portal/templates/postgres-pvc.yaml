@@ -1,0 +1,16 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "developer-portal.postgresName" . }}
+  labels:
+    {{- include "developer-portal.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.postgres.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.postgres.storage }}
+{{- end }}

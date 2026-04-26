@@ -34,33 +34,33 @@ The Helm chart is in [./charts/developer-portal](./charts/developer-portal/).
 **1. Create the namespace:**
 
 ```sh
-kubectl create namespace backstage
+kubectl create namespace developer-portal
 ```
 
-**2. Create the image pull secret:**
+<!-- **2. Create the image pull secret:**
 
 The image is hosted on GHCR in a private repository. Create a Personal Access Token with `read:packages` scope, then:
 
 ```sh
 kubectl create secret docker-registry ghcr-login-secret \
-  --namespace backstage \
+  --namespace developer-portal \
   --docker-server=ghcr.io \
   --docker-username=<your-github-username> \
   --docker-password=<your-github-token>
-```
+``` -->
 
 **3. Create the app secrets:**
 
 ```sh
 # Postgres credentials (dummy values for dev)
 kubectl create secret generic postgres-secrets \
-  --namespace backstage \
+  --namespace developer-portal \
   --from-literal=POSTGRES_USER=backstage \
   --from-literal=POSTGRES_PASSWORD=backstage
 
 # App secrets - replace with a real GitHub token for catalog access
 kubectl create secret generic backstage-secrets \
-  --namespace backstage \
+  --namespace developer-portal \
   --from-literal=GITHUB_TOKEN=${GITHUB_TOKEN}
 ```
 
@@ -68,9 +68,9 @@ kubectl create secret generic backstage-secrets \
 
 ```sh
 IMAGE_TAG=local
-helm upgrade --install backstage charts/developer-portal \
+helm upgrade --install developer-portal charts/developer-portal \
   --set image.tag=latest \
-  --namespace backstage
+  --namespace developer-portal
 ```
 
 This deploys an in-cluster Postgres instance alongside the portal (`postgres.enabled` defaults to `true`).
@@ -79,7 +79,7 @@ This deploys an in-cluster Postgres instance alongside the portal (`postgres.ena
 
 ```sh
 helm install backstage charts/developer-portal \
-  --namespace backstage \
+  --namespace developer-portal \
   --set image.tag=<image-tag> \
   --set postgres.enabled=false \
   --set postgres.host=<your-db-host>
@@ -88,8 +88,8 @@ helm install backstage charts/developer-portal \
 ### Additional Options
 
 ```sh
-helm upgrade --install backstage charts/developer-portal \
-  --namespace backstage \
+helm upgrade --install developer-portal charts/developer-portal \
+  --namespace developer-portal \
   --set image.tag=latest \
   --set ingress.enabled=true \
   --set ingress.host=backstage.example.local \

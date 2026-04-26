@@ -1,0 +1,105 @@
+# Default values for developer-portal.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/zuse-cc/backstage-demo
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets:
+  - name: ghcr-login-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 7007
+
+# Name of the secret containing app-level env vars (e.g. GITHUB_TOKEN).
+# Create this secret out-of-band before deploying.
+existingSecret: "backstage-secrets"
+
+# Postgres configuration
+postgres:
+  # Deploy an in-cluster postgres instance. Disable for production and point host at an external DB.
+  enabled: true
+  image: postgres:16-alpine
+  port: 5432
+  # Storage for the in-cluster postgres PVC
+  storage: 2Gi
+  storageClassName: local-path
+  # External DB hostname. Only used when postgres.enabled is false.
+  host: ""
+  # Name of secret containing POSTGRES_USER and POSTGRES_PASSWORD.
+  # Create this secret out-of-band before deploying.
+  existingSecret: "postgres-secrets"
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  host: developer-portal.local
+  tls:
+    enabled: false
+    clusterIssuer: cluster-issuer
+    # Secret where cert-manager will store the issued certificate.
+    # Defaults to <fullname>-tls if not set.
+    secretName: ""
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+  - name: gateway
+    sectionName: http
+  hostnames:
+  - developer-portal.local
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /healthcheck
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
