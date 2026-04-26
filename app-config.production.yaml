@@ -1,6 +1,7 @@
 app:
   # Should be the same as backend.baseUrl when using the `app-backend` plugin.
-  baseUrl: http://localhost:7007
+  # baseUrl: http://localhost:7007
+  baseUrl: https://backstage.k3s-lab.local
 
 backend:
   # Note that the baseUrl should be the URL that the browser and other clients
@@ -8,7 +9,7 @@ backend:
   # reachable not just from within the backend host, but from all of your
   # callers. When its value is "http://localhost:7007", it's strictly private
   # and can't be reached by others.
-  baseUrl: http://localhost:7007
+  baseUrl: https://backstage.k3s-lab.local
   # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
   # all interfaces, the most permissive setting. The right value depends on your specific deployment.
   listen: ':7007'
@@ -30,7 +31,9 @@ backend:
 
 auth:
   providers:
-    guest: {}
+    guest:
+      # This is a demo, so we're cool with this. Don't do this at home!
+      dangerouslyAllowOutsideDevelopment: true 
 
 catalog:
   # Overrides the default list locations from app-config.yaml as these contain example data.
