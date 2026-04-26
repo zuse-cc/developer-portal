@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: backstage
+      POSTGRES_PASSWORD: backstage
+      POSTGRES_DB: backstage
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U backstage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backstage:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "7007:7007"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: backstage
+      POSTGRES_PASSWORD: backstage
+
+volumes:
+  postgres-data:
