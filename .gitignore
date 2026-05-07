@@ -42,6 +42,7 @@ site
 
 # Local configuration files
 *.local.yaml
+.claude/settings.local.json
 
 # Sensitive credentials
 *-credentials.yaml
