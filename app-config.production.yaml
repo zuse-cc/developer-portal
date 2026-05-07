@@ -67,3 +67,9 @@ catalog:
       target: ./examples/org.yaml
       rules:
         - allow: [User, Group]
+
+    # Minecraft server creation template
+    - type: file
+      target: ./templates/minecraft-server/template.yaml
+      rules:
+        - allow: [Template]

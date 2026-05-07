@@ -1,0 +1,79 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: minecraft-server-creation
+  title: Create a Minecraft Server
+  description: Provisions a new Minecraft server instance by triggering the [minecraft-infra pipeline](https://github.com/joerx/minecraft-infra/actions).
+  tags:
+    - minecraft
+    - infrastructure
+spec:
+  owner: group:default/infra-team
+  type: infrastructure
+  parameters:
+    - title: Server Configuration
+      required:
+        - env
+        - region
+        - gameMode
+        - difficulty
+      properties:
+        env:
+          title: Environment
+          type: string
+          default: dev
+          enum: [sbx, dev]
+          enumNames: [Sandbox, Development]
+        region:
+          title: Region
+          type: string
+          default: eu-central
+          enum: [eu-central, ap-south]
+          enumNames: [EU Central, AP South]
+        gameMode:
+          title: Game Mode
+          type: string
+          default: creative
+          enum: [creative, survival]
+          enumNames: [Creative, Survival]
+        difficulty:
+          title: Difficulty
+          type: string
+          default: peaceful
+          enum: [peaceful, easy, normal, hard]
+          enumNames: [Peaceful, Easy, Normal, Hard]
+        version:
+          title: Minecraft Version
+          type: string
+          default: '1.21.8'
+          description: Minecraft server version to deploy
+        ingress:
+          title: Ingress CIDR
+          type: string
+          description: IP CIDR block allowed to connect (leave empty to use default)
+
+  steps:
+    - id: dispatch
+      name: Trigger Server Creation Workflow
+      action: github:actions:dispatch
+      input:
+        repoUrl: 'github.com?owner=joerx&repo=minecraft-infra'
+        workflowId: 'create-minecraft-server.yaml'
+        branchOrTagName: 'main'
+        workflowInputs:
+          env: ${{ parameters.env }}
+          region: ${{ parameters.region }}
+          gameMode: ${{ parameters.gameMode }}
+          difficulty: ${{ parameters.difficulty }}
+          version: ${{ parameters.version }}
+          ingress: ${{ parameters.ingress }}
+
+  output:
+    text:
+      - title: Next Steps
+        content: |
+          The server creation workflow has been triggered. Once complete, a pull request
+          will be opened in [minecraft-infra](https://github.com/joerx/minecraft-infra/pulls) for review.
+    links:
+      - title: View Workflow Run
+        url: https://github.com/joerx/minecraft-infra/actions/workflows/create-minecraft-server.yaml

@@ -135,6 +135,12 @@ catalog:
       rules:
         - allow: [User, Group]
 
+    # Minecraft server creation template
+    - type: file
+      target: ../../templates/minecraft-server/template.yaml
+      rules:
+        - allow: [Template]
+
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
