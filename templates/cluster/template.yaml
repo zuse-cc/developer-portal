@@ -1,0 +1,57 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: lke-cluster-creation
+  title: Create an LKE Cluster
+  description: Provisions a new Linode Kubernetes Engine cluster by triggering the [cluster-infra pipeline](https://github.com/zuse-cc/cluster-infra/actions).
+  tags:
+    - kubernetes
+    - infrastructure
+spec:
+  owner: group:default/infra-team
+  type: infrastructure
+  parameters:
+    - title: Cluster Configuration
+      required:
+        - env
+        - region
+      properties:
+        env:
+          title: Environment
+          type: string
+          default: dev
+          enum: [dev, sbx]
+          enumNames: [Development, Sandbox]
+        region:
+          title: Region
+          type: string
+          default: eu-central
+          enum: [eu-central, ap-south]
+          enumNames: [EU Central, AP South]
+        name:
+          title: Cluster Name
+          type: string
+          description: Leave empty to auto-generate a name
+
+  steps:
+    - id: dispatch
+      name: Trigger Cluster Creation Workflow
+      action: github:actions:dispatch
+      input:
+        repoUrl: 'github.com?owner=zuse-cc&repo=cluster-infra'
+        workflowId: 'create-cluster.yaml'
+        branchOrTagName: 'main'
+        workflowInputs:
+          env: ${{ parameters.env }}
+          region: ${{ parameters.region }}
+          name: ${{ parameters.name }}
+
+  output:
+    text:
+      - title: Next Steps
+        content: |
+          The cluster creation workflow has been triggered. Once complete, a pull request
+          will be opened in [cluster-infra](https://github.com/zuse-cc/cluster-infra/pulls) for review.
+    links:
+      - title: View Workflow Run
+        url: https://github.com/zuse-cc/cluster-infra/actions/workflows/create-cluster.yaml
