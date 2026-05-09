@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/zuse-cc/backstage-demo
+  repository: ghcr.io/zuse-cc/developer-portal
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -42,7 +42,7 @@ postgres:
   port: 5432
   # Storage for the in-cluster postgres PVC
   storage: 2Gi
-  storageClassName: local-path
+  # storageClassName: ""  # Leave unset to use the cluster default storage class
   # External DB hostname. Only used when postgres.enabled is false.
   host: ""
   # Name of secret containing POSTGRES_USER and POSTGRES_PASSWORD.

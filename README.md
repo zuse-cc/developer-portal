@@ -37,7 +37,7 @@ The Helm chart is in [./charts/developer-portal](./charts/developer-portal/).
 kubectl create namespace developer-portal
 ```
 
-<!-- **2. Create the image pull secret:**
+**2. Create the image pull secret:**
 
 The image is hosted on GHCR in a private repository. Create a Personal Access Token with `read:packages` scope, then:
 
@@ -45,9 +45,9 @@ The image is hosted on GHCR in a private repository. Create a Personal Access To
 kubectl create secret docker-registry ghcr-login-secret \
   --namespace developer-portal \
   --docker-server=ghcr.io \
-  --docker-username=<your-github-username> \
-  --docker-password=<your-github-token>
-``` -->
+  --docker-username=$(git config get user.name) \
+  --docker-password=$GITHUB_TOKEN
+```
 
 **3. Create the app secrets:**
 
@@ -67,7 +67,6 @@ kubectl create secret generic backstage-secrets \
 **4. Install the chart:**
 
 ```sh
-IMAGE_TAG=local
 helm upgrade --install developer-portal charts/developer-portal \
   --set image.tag=latest \
   --namespace developer-portal
