@@ -1,0 +1,66 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: application-stack-deployment
+  title: Deploy an Application Stack
+  description: Deploys an application stack onto an existing LKE cluster by triggering the [create-stack pipeline](https://github.com/zuse-cc/cluster-infra/actions).
+  tags:
+    - kubernetes
+    - infrastructure
+spec:
+  owner: group:default/infra-team
+  type: infrastructure
+  parameters:
+    - title: Stack Configuration
+      required:
+        - template
+        - cluster
+        - env
+        - region
+      properties:
+        template:
+          title: Stack
+          type: string
+          default: platform-services
+          enum: [platform-services]
+          enumNames: [Platform Services]
+        cluster:
+          title: Target Cluster
+          type: string
+          description: Name of the existing cluster to deploy onto
+        env:
+          title: Environment
+          type: string
+          default: dev
+          enum: [dev, sbx]
+          enumNames: [Development, Sandbox]
+        region:
+          title: Region
+          type: string
+          default: eu-central
+          enum: [eu-central, ap-south]
+          enumNames: [EU Central, AP South]
+
+  steps:
+    - id: dispatch
+      name: Trigger Stack Deployment Workflow
+      action: github:actions:dispatch
+      input:
+        repoUrl: 'github.com?owner=zuse-cc&repo=cluster-infra'
+        workflowId: 'create-stack.yaml'
+        branchOrTagName: 'main'
+        workflowInputs:
+          template: ${{ parameters.template }}
+          cluster: ${{ parameters.cluster }}
+          env: ${{ parameters.env }}
+          region: ${{ parameters.region }}
+
+  output:
+    text:
+      - title: Next Steps
+        content: |
+          The stack deployment workflow has been triggered. Once complete, a pull request
+          will be opened in [cluster-infra](https://github.com/zuse-cc/cluster-infra/pulls) for review.
+    links:
+      - title: View Workflow Run
+        url: https://github.com/zuse-cc/cluster-infra/actions/workflows/create-stack.yaml
