@@ -141,6 +141,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Application stack deployment template
+    - type: file
+      target: ../../templates/application-stack/template.yaml
+      rules:
+        - allow: [Template]
+
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
