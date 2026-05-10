@@ -73,3 +73,9 @@ catalog:
       target: ./templates/cluster/template.yaml
       rules:
         - allow: [Template]
+
+    # Application stack deployment template
+    - type: file
+      target: ./templates/application-stack/template.yaml
+      rules:
+        - allow: [Template]
