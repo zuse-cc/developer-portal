@@ -31,9 +31,7 @@ backend:
 
 auth:
   providers:
-    guest:
-      # This is a demo, so we're cool with this. Don't do this at home!
-      dangerouslyAllowOutsideDevelopment: true 
+    oauth2Proxy: {}
 
 catalog:
   providers:
