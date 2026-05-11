@@ -46,6 +46,8 @@ services:
       - --cookie-secure=false
       - --email-domain=*
       - --set-xauthrequest=true
+      - --client-id=unused
+      - --client-secret=unused
 
 volumes:
   postgres-data:
