@@ -31,7 +31,10 @@ backend:
 
 auth:
   providers:
-    oauth2Proxy: {}
+    oauth2Proxy:
+      signIn:
+        resolvers:
+          - resolver: forwardedUserMatchingUserEntityName
 
 catalog:
   providers:

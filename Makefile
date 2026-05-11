@@ -31,7 +31,7 @@ docker-build: packages/backend/dist
 
 .PHONY: docker-run
 docker-run: packages/backend/dist
-	docker compose up --build -d
+	docker compose up --build
 
 .PHONY: docker-push
 docker-push: docker-build

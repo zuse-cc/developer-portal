@@ -38,11 +38,11 @@ services:
     volumes:
       - ./dev/htpasswd:/etc/oauth2-proxy/htpasswd:ro
     command:
-      - --provider=htpasswd
+      - --provider=google
       - --htpasswd-file=/etc/oauth2-proxy/htpasswd
       - --upstream=http://backstage:7007
       - --http-address=0.0.0.0:4180
-      - --cookie-secret=rxU5hNxUbqywG20Wj88q/XxJRjc4WKWcs5SOy3SuEtM=
+      - --cookie-secret=gqg1m4GSb70A45OYf7BtjPeIIEdJ9eM3
       - --cookie-secure=false
       - --email-domain=*
       - --set-xauthrequest=true
